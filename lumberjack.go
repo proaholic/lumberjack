@@ -147,6 +147,16 @@ func (l *Logger) Write(p []byte) (n int, err error) {
 		if err = l.openExistingOrNew(len(p)); err != nil {
 			return 0, err
 		}
+	} else {
+		_, err = os.Stat(l.Filename)
+		// fmt.Printf("has error %v", err)
+		if os.IsNotExist(err) {
+			if err = l.openExistingOrNew(len(p)); err != nil {
+				return 0, err
+			}
+		} else {
+			return 0, err
+		}
 	}
 
 	if l.size+writeLen > l.max() {

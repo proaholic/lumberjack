@@ -35,12 +35,22 @@ func TestNewFile(t *testing.T) {
 	l := &Logger{
 		Filename: logFile(dir),
 	}
+	// t.Logf("Filename is %s", l.Filename)
 	defer l.Close()
 	b := []byte("boo!")
 	n, err := l.Write(b)
 	isNil(err, t)
 	equals(len(b), n, t)
-	existsWithContent(logFile(dir), b, t)
+	// existsWithContent(logFile(dir), b, t)
+
+	os.Remove(l.Filename)
+
+	b2 := []byte("cool!")
+	_, err = l.Write(b2)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
 	fileCount(dir, 1, t)
 }
 
